@@ -2,11 +2,12 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>manage-system</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
-    <meta name="keywords" content="vue.js, wms, vue2, 后台模板, 管理系统, element" />
-    <meta name="description" content="基于Vue2 + Element UI 的后台管理系统解决方案" />
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>Mint UI</title>
     <script src="/static/AppStaticParams.js"></script>
+    <% if (process.env.NODE_ENV === 'production') { %>
+      <script src="//unpkg.com/fastclick@1.0.6/lib/fastclick.js"></script>
+    <% } %>
 </head>
 <body>
 <div id="app"></div>

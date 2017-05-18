@@ -1,8 +1,8 @@
 var path = require('path')
-var utils = require('./utils')
+var utils = require('../utils')
 var webpack = require('webpack')
-var config = require('../config')
-var vueLoaderConfig = require('./vue-loader.conf')
+var config = require('../../config')
+var vueLoaderConfig = require('../vue-loader.conf')
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
@@ -13,7 +13,7 @@ module.exports = {
       'AppStaticParams': 'window.AppStaticParams'
   },
   entry: {
-    app: ['babel-polyfill','./src/main.js']
+    app: ['babel-polyfill','./student/main.js']
   },
   output: {
     path: config.build.assetsRoot,
@@ -25,14 +25,14 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.vue', '.json'],
     modules: [
-      resolve('src'),
-      resolve('node_modules')
+      resolve('student'),
+      resolve('../node_modules')
     ],
     alias: {
       'vue$': 'vue/dist/vue.common.js',
-      'src': resolve('src'),
-      'assets': resolve('src/assets'),
-      'components': resolve('src/components')
+      'src': resolve('student'),
+      'assets': resolve('student/assets'),
+      'components': resolve('student/components')
     }
   },
   module: {

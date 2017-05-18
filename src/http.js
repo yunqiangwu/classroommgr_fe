@@ -7,7 +7,6 @@ import axios from 'axios'
 import store from './store'
 import * as types from './store/types'
 import router from './router'
-import AppStaticParams from '../static/AppStaticParams.json';
 let qs = require('qs');
 import _ from 'underscore';
 // axios 配置

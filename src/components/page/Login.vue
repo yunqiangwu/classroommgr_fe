@@ -50,15 +50,14 @@
                 self.$refs[formName].validate((valid) => {
                     if (valid) {
                       self.$axios({
-                        url: self.AppStaticParams.loginUrl|| "/login",
+                        url: self.AppStaticParams.mainUrl + "/login",
                         method: 'post',
                         data: userinfo,
                       }).then((res) => {
                         res = res.data;
                         if(res.success){
-                          self.$store.dispatch('login',userinfo.username);
+                          self.$store.dispatch('login',res.userInfo);
                           // localStorage.setItem('ms_username',userinfo.username);
-
                           if(self.$router.currentRoute.query&&self.$router.currentRoute.query.redirect){
                             self.$router.push(self.$router.currentRoute.query.redirect);
                           }else{

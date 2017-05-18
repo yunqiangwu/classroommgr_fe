@@ -89,7 +89,7 @@
             },
             getData(){
                 let self = this;
-                return this.$axios.post(this.AppStaticParams.mainUrl+'/api/group',{
+                return this.$axios.post(this.AppStaticParams.mainUrl+'/group',{
                   page:self.cur_page,
                   rows:self.pageSize,
                   // mgrid:1
@@ -177,7 +177,7 @@
                 return;
               }
 
-              self.$axios.post(self.AppStaticParams.mainUrl+'/api/group/submit',self.changedDatas)
+              self.$axios.post(self.AppStaticParams.mainUrl+'/group/submit',self.changedDatas)
                 .then((res) => {
                     if(res.data.success){
                       self.$message.info('成功更新 '+res.data.list.length+' 条数据');

@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import App from './App';
 import store from './store'
-import AppStaticParams from '../static/AppStaticParams.json';
+// import AppStaticParams from '../static/AppStaticParams';
 // import { mapGetters, mapActions } from 'vuex';
 import router from './router';
 import axios from './http';
@@ -41,11 +41,11 @@ new Vue({
     //   // console.log(this.$router);
     // },
 
-    computed: {
-      isAuthenticated: function () {
-        return this.$store.getters.isAuthenticated;
-      }
-    },
+    // computed: {
+    //   isAuthenticated: function () {
+    //     return this.$store.getters.isAuthenticated;
+    //   }
+    // },
     store,
     router,
     render: h => h(App)

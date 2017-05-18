@@ -197,7 +197,7 @@ export default {
     },
     created() {
       var self = this;
-      this.$axios.post('/api/group',{rows:1000}).then(function (res) {
+      this.$axios.post(AppStaticParams.mainUrl + '/group',{rows:1000}).then(function (res) {
         // if(res.data.success){
         res.data.list.forEach(item=>item.type=self.getRandomType());
           self.studentGroupList = res.data.list;
@@ -226,7 +226,7 @@ export default {
         },
         getData() {
             let self = this;
-            this.$axios.post(this.AppStaticParams.mainUrl + '/api/users', {
+            this.$axios.post(this.AppStaticParams.mainUrl + '/users', {
                 page: self.cur_page,
                 rows: self.pageSize,
                 mgrid: 1
@@ -332,7 +332,7 @@ export default {
                 return;
             }
 
-            self.$axios.post(self.AppStaticParams.mainUrl + '/api/users/submit', self.changedDatas)
+            self.$axios.post(self.AppStaticParams.mainUrl + '/users/submit', self.changedDatas)
                 .then((res) => {
                     if (res.data.success) {
                         self.$message.info('成功更新 ' + res.data.list.length + ' 条数据');

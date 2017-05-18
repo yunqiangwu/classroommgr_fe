@@ -211,7 +211,7 @@ export default {
             }
             var data =  findItemByid(self.studentGroupList,self.currentEditGroupId);
             data.studentIds = self.currentTransValue.join(',');
-            self.$axios.post(self.AppStaticParams.mainUrl + '/api/group/save', data)
+            self.$axios.post(self.AppStaticParams.mainUrl + '/group/save', data)
                 .then((res) => {
                     if (res.data.success) {
                         self.$message.info(res.data.msg);

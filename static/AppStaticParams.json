@@ -1,5 +1,0 @@
-{
-    "loginUrl" : "/api/login",
-    "logoutUrl" : "/api/logout",
-    "mainUrl" : ""
-}
