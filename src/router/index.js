@@ -14,10 +14,29 @@ export default new Router({
             path: '/index',
             component: resolve => require(['../components/common/Home.vue'], resolve),
             children:[
+
+                {
+                  path: '/question',
+                  component: resolve => require(['../components/page/question/Question.vue'], resolve)
+
+                },
+                {
+                  path: '/signinrecord',
+                  component: resolve => require(['../components/page/signin/SigninRecord.vue'], resolve)
+
+                },
                 {
                     path: '/readme',
                     alias: '/',
-                    component: resolve => require(['../components/page/Readme.vue'], resolve)
+                    component: resolve => require(['../components/page/Index.vue'], resolve)
+                },
+                {
+                  path: '/signinsetting',
+                  component: resolve => require(['../components/page/signin/SigninSetting.vue'], resolve),
+                },
+                {
+                  path: '/startsignin',
+                  component: resolve => require(['../components/page/Readme.vue'], resolve),
                 },
                 {
                     path: '/studentmgr',

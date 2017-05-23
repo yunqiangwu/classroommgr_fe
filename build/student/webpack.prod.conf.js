@@ -1,7 +1,7 @@
 var path = require('path')
-var utils = require('./utils')
+var utils = require('../utils')
 var webpack = require('webpack')
-var config = require('../config')
+var config = require('../../config')
 var merge = require('webpack-merge')
 var baseWebpackConfig = require('./webpack.base.conf')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -43,8 +43,8 @@ var webpackConfig = merge(baseWebpackConfig, {
     // you can customize output by editing /index.html
     // see https://github.com/ampedandwired/html-webpack-plugin
     new HtmlWebpackPlugin({
-      filename: config.build.index,
-      template: 'index.html',
+      filename: path.resolve(__dirname, '../../dist/templates/student.ftl'),
+      template: 'student.html',
       inject: true,
       minify: {
         removeComments: true,

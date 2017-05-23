@@ -1,12 +1,15 @@
 import Vue from 'vue';
-import store from './store';
+import store from '../src/store';
 import "babel-polyfill";
 import App from './app';
 import MintUI from 'mint-ui';
 import router from './router';
 import 'mint-ui/lib/style.css';
-Vue.use(MintUI);
+import ElementUI from 'element-ui';
 
+
+Vue.use(MintUI);
+Vue.use(ElementUI);
 
 
 

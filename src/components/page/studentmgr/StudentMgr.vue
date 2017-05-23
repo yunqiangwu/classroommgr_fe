@@ -167,8 +167,6 @@ export default {
             dialogFormVisible: false,
             rules: {
                 username: [
-                    // { required: true, message: '请输入账号', trigger: 'blur' },
-                    // { min: 12, max: 12, message: '长度为 12 个字符', trigger: 'blur' },
                     {
                         validator: checkUsername,
                         trigger: 'blur'

@@ -9,26 +9,28 @@
         </el-breadcrumb>
     </div>
 
+<div class="container">
+  <el-button-group class="btngroup2">
 
-     <el-transfer v-model="currentTransValue" :filterable="true" :titles="['所有学生', '分组学生']" :button-texts="['从分组移除','添加到分组']" :data="currentTransferData"></el-transfer>
+    <el-select v-model="currentEditGroupId" @change="handerChangeGroup"  placeholder="请选择编辑的分组">
+    <el-option
+      v-for="item in studentGroupList"
+      :key="item.id"
+      :label="item.name"
+      :value="item.id">
+    </el-option>
+  </el-select>
 
-     <el-button-group class="btngroup2">
+      <!-- <el-button icon="plus" type="primary" @click="handleAdd()">新增学生</el-button> -->
+      <el-badge :is-dot="isUnsave" class="item">
+          <el-button icon="upload" type="success" @click="handleSave()">保存修改</el-button>
+      </el-badge>
+      <!-- <el-button  icon="delete"  type="danger">批量删除</el-button> -->
+  </el-button-group>
 
-       <el-select v-model="currentEditGroupId" @change="handerChangeGroup"  placeholder="请选择编辑的分组">
-       <el-option
-         v-for="item in studentGroupList"
-         :key="item.id"
-         :label="item.name"
-         :value="item.id">
-       </el-option>
-     </el-select>
+   <el-transfer class="transfer" v-model="currentTransValue" :filterable="true" :titles="['所有学生', '分组学生']" :button-texts="['从分组移除','添加到分组']" :data="currentTransferData"></el-transfer>
 
-         <!-- <el-button icon="plus" type="primary" @click="handleAdd()">新增学生</el-button> -->
-         <el-badge :is-dot="isUnsave" class="item">
-             <el-button icon="upload" type="success" @click="handleSave()">保存修改</el-button>
-         </el-badge>
-         <!-- <el-button  icon="delete"  type="danger">批量删除</el-button> -->
-     </el-button-group>
+</div>
 
 </div>
 </template>
@@ -64,7 +66,7 @@ export default {
     },
     created() {
       var self = this;
-      this.$axios.post('/api/group',{rows:1000}).then(function (res) {
+      this.$axios.post(this.AppStaticParams.mainUrl+'/group',{rows:1000}).then(function (res) {
         // if(res.data.success){
           if(res.data.list.length<=0){
             self.$router.push('/studentmgr');
@@ -83,7 +85,7 @@ export default {
 
         getData() {
             let self = this;
-            this.$axios.post('/api/users', {
+            this.$axios.post(self.AppStaticParams.mainUrl + '/users', {
                 rows: 333,
                 mgrid: 1
             }).then((res) => {
@@ -234,8 +236,23 @@ export default {
     width: 20px;
 }
 
+.container {
+  position: relative;
+}
+
+.transfer{
+  position: absolute;
+  left: 50%;
+  top:100px;
+  transform: translateX(-50%);
+  min-width: 520px;
+}
+
 .btngroup2 {
-    /*float: right;*/
-    margin-top: 10px;
+  position: absolute;
+    min-width: 400px;
+  left: 50%;
+  transform: translateX(-50%);
+      margin: 10px auto;
 }
 </style>
