@@ -182,7 +182,7 @@ export default {
 
           qConfig: {
                 value: this.AppStaticParams.studentUrl,
-                imagePath: '/static/img/img.jpg',
+                imagePath: '/static/img/img2.jpg',
                 filter: 'color',
                 size:400,
             },
