@@ -4,7 +4,7 @@
     <div class="content" >
       <div class='my-tab-container'>
         <transition name="move" mode="out-in">
-            <router-view></router-view>
+            <router-view class="home-view"></router-view>
         </transition>
       </div>
       <mt-tabbar v-model="selected" @click.native="goRouter">
@@ -62,9 +62,12 @@ export default {
     height: 100%;
   }
   .my-tab-container{
-    height: calc(100% - 60px);
+    height: calc(100% - 53px);
   }
   .my-tab-container{
     overflow-y: auto;
+  }
+  .home-view{
+    margin-top: -21px;
   }
 </style>

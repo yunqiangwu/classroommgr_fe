@@ -97,17 +97,26 @@ Vue.mixin({
     const events = this.socketEvents
     if (events) {
       Object.keys(events).forEach(k => {
+        console.log(k);
         this.$stomp.subscribe(k, events[k].bind(this))
       })
     }
   },
   beforeDestory () {
     const events = this.socketEvents
+    // const webroot = '';
+    console.log('23232323223232',this.socketEvents);
+    var self = this;
     if (events) {
-      // Object.keys(events).forEach(k => {
-      //   this.$webSocket.off(k, events[k].bind(this))
-      // })
-      this.$stomp.unsubscribe();
+      Object.keys(events).forEach(k => {
+        self.$stomp.unsubscribe(k, events[k].bind(self))
+      })
+      // this.$stomp.unsubscribe();
+    }
+  },
+  filters:{
+    json(v,b){
+      return JSON.stringify(v,null,b)
     }
   }
 });

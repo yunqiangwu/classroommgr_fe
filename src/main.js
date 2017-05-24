@@ -100,11 +100,15 @@ Vue.mixin({
   },
   beforeDestory () {
     const events = this.socketEvents
+
     if (events) {
-      // Object.keys(events).forEach(k => {
-      //   this.$webSocket.off(k, events[k].bind(this))
-      // })
-      this.$stomp.unsubscribe();
+      var self = this;
+      if (events) {
+        Object.keys(events).forEach(k => {
+          self.$stomp.unsubscribe(k, events[k].bind(self))
+        })
+        // this.$stomp.unsubscribe();
+      }
     }
   }
 });

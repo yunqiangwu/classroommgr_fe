@@ -92,7 +92,7 @@
                         </el-switch>
                     </div>
 
-                    <span key="debug">{{qConfig.value}}</span>
+                    <!-- <span key="debug">{{qConfig.value}}</span> -->
 
                 </transition-group>
                 <!-- </el-form-item> -->
@@ -120,7 +120,6 @@ import * as types from 'src/store/types';
 import zkTimeDown from './Timer.vue';
 import SigninStudentList from './SigninStudentList.vue';
 // import moment from 'moment';
-
 import VueQArt from 'vue-qart'
 //
 // new Vue({
@@ -147,7 +146,40 @@ export default {
 
     },
     data: function() {
+
+        var self = this;
+
         return {
+
+          socketEvents:{
+            '/topic/getSigninMsg': function (frame) {
+              var username = frame.headers.username;
+               if(!username){
+                 return;
+               }
+               var uid = self.currentStudents.find(function(item){return item.username ===username})['id'];
+
+               if(self.signinState == 1){
+                 self.$stomp.send(`/user/${username}/receiveSiginMsg`,{signinState:self.signinState,mSigninState:self.form.result[''+uid]},JSON.stringify(self.form));
+               }else{
+                 self.$stomp.send(`/user/${username}/noSigin`,{signinState:self.signinState});
+               }
+            },
+            '/topic/doSignin':function (frame) {
+                if(self.signinState!=1){
+                  return;
+                }
+                var username = frame.headers.username;
+                var uid = self.currentStudents.find(function(item){return item.username ===username})['id'];
+                if(!uid){
+                  return;
+                }
+                self.$store.dispatch(types.SIGNIN,uid).then(function () {
+                  self.$stomp.send(`/user/${username}/finishSigninMsg`,{signinState:self.signinState,mSigninState:1},JSON.stringify(self.form));
+                });
+            }
+          },
+
           qConfig: {
                 value: this.AppStaticParams.studentUrl,
                 imagePath: '/static/img/img.jpg',
@@ -158,8 +190,8 @@ export default {
                 id: '',
                 name: '',
                 groupName: '',
-                timeSpan: '00:01',
-                result: {},
+                timeSpan: '00:59',
+                result: {},  // 0 暂未签到   1 已经签到  2 未到  3 请假
                 noSignNum: 0,
                 signNum: 0,
                 totalNum: 0,
@@ -270,11 +302,9 @@ export default {
                 self.$message.success('启动签到！');
                 self.$refs.timer.start();
                 self.signinState = 1;
-
-                self.qConfig.value= this.AppStaticParams.studentUrl+ "/signin?id="+signRecord.startTime.getTime() ;
+                self.qConfig.value= this.AppStaticParams.studentUrl+ "/signin?signinid="+signRecord.startTime.getTime() ;
+                self.$stomp.send('/topic/beginSigninMsg',{signinState:self.signinState},JSON.stringify(signRecord));
                 self.isShow2wm = true;
-
-
                 self.loaded();
             });
 
@@ -309,6 +339,7 @@ export default {
                 self.signinState = 3;
                 self.$message.success('签到活动结束！');
                 self.loaded();
+                this.$stomp.send('/topic/stopSigninMsg',{signinState:self.signinState},JSON.stringify(saveedRecord));
             });
         },
         handerChangeGroup() {
