@@ -14,7 +14,6 @@ export default new Router({
             path: '/index',
             component: resolve => require(['../components/common/Home.vue'], resolve),
             children:[
-
                 {
                   path: '/question',
                   component: resolve => require(['../components/page/question/Question.vue'], resolve)

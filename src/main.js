@@ -12,10 +12,10 @@ import 'element-ui/lib/theme-default/index.css'; // 默认主题
 import "babel-polyfill";
 // import './mock/index.js';
 import Stomp from 'stompjs';
-import sockjs from 'sockjs-client';
+import Sockjs from 'sockjs-client';
 let  Loading  = ElementUI.Loading;
 
-
+var AppStaticParams = window.AppStaticParams;
 // window.stomp = require('stompjs');
 // window.sockjs = require('sockjs-client');
 
@@ -64,23 +64,21 @@ router.beforeEach((to, from, next) => {
     return;
   }
 
-
-
   Vue.prototype.loading('连接中...')
   if (!Vue.prototype.$stomp) {
-    const $stomp = Stomp.over( new sockjs(AppStaticParams.mainUrl + '/ws'));
+    const $stomp = Stomp.over( new Sockjs(AppStaticParams.mainUrl + '/ws'));
     $stomp.connect({},function(e){
       console.log(e);
       next();
     },function(e){
-      alert(e);
+      alert("与服务器断开连接，请重新登录！");
       console.log(e);
       store.dispatch('logout',true).then(function(res) {
         next('/login');
       });
-
     });
     Vue.prototype.$stomp = $stomp;
+    window.$stomp = $stomp;
   } else {
     next()
   }

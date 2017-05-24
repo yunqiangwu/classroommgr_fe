@@ -271,7 +271,7 @@ export default {
                 self.$refs.timer.start();
                 self.signinState = 1;
 
-                self.qConfig.value= this.AppStaticParams.studentUrl+ "/sigin?id="+signRecord.startTime.getTime() ;
+                self.qConfig.value= this.AppStaticParams.studentUrl+ "/signin?id="+signRecord.startTime.getTime() ;
                 self.isShow2wm = true;
 
 

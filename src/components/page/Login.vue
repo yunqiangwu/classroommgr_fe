@@ -24,71 +24,71 @@
         console.log(this.$router.currentRoute);
       },
         data: function(){
-            return {
-                tipMsg: '',
-                ruleForm: {
-                    username: 'test1',
-                    password: '12345678'
-                },
-                rules: {
-                    username: [
-                        { required: true, message: '请输入用户名', trigger: 'blur' }
-                    ],
-                    password: [
-                        { required: true, message: '请输入密码', trigger: 'blur' }
-                    ]
-                }
-            }
+          return {
+              tipMsg: '',
+              ruleForm: {
+                  username: 'test1',
+                  password: '12345678'
+              },
+              rules: {
+                  username: [
+                      { required: true, message: '请输入用户名', trigger: 'blur' }
+                  ],
+                  password: [
+                      { required: true, message: '请输入密码', trigger: 'blur' }
+                  ]
+              }
+          }
         },
         methods: {
             submitForm(formName) {
-                const self = this;
-                var userinfo = {
-                  'username':self.ruleForm.username,
-                  'password':self.ruleForm.password
-                };
-                self.$refs[formName].validate((valid) => {
-                    if (valid) {
-                      self.$axios({
-                        url: self.AppStaticParams.mainUrl + "/login",
-                        method: 'post',
-                        data: userinfo,
-                      }).then((res) => {
-                        res = res.data;
-                        if(res.success){
-                          self.$store.dispatch('login',res.userInfo);
-                          // localStorage.setItem('ms_username',userinfo.username);
-                          if(self.$router.currentRoute.query&&self.$router.currentRoute.query.redirect){
-                            self.$router.push(self.$router.currentRoute.query.redirect);
-                          }else{
-                            self.$router.push('/');
-                          }
-
-                          // console.log("Response: "+JSON.stringify(res));
-                        }else {
-                          self.$message(res.message||'验证失败');
-                          self.tipMsg = res.message||'验证失败';
+              const self = this;
+              var userinfo = {
+                'username':self.ruleForm.username,
+                'password':self.ruleForm.password
+              };
+              self.$refs['ruleForm'].validate((valid) => {
+                  if (valid) {
+                    self.$axios({
+                      url: self.AppStaticParams.mainUrl + "/login",
+                      method: 'post',
+                      data: userinfo,
+                    }).then((res) => {
+                      res = res.data;
+                      if(res.success){
+                        self.$store.dispatch('login',res.userInfo);
+                        // localStorage.setItem('ms_username',userinfo.username);
+                        if(self.$router.currentRoute.query&&self.$router.currentRoute.query.redirect){
+                          self.$router.push(self.$router.currentRoute.query.redirect);
+                        }else{
+                          self.$router.push('/');
                         }
-                      }).catch((err) => {
-                          console.log("Error: "+err);
-                      });
+
+                        // console.log("Response: "+JSON.stringify(res));
+                      }else {
+                        self.$message(res.message||'验证失败');
+                        self.tipMsg = res.message||'验证失败';
+                      }
+                    }).catch((err) => {
+                        console.log("Error: "+err);
+                    });
 
 // self.AppStaticParams.loginUrl
-                      // self.$axios.post(self.AppStaticParams.loginUrl|| "/login",userinfo).then((res) => {
-                      //     localStorage.setItem('ms_username',res);
-                      //     self.$router.push('/readme');
-                      //     console.log("Response: "+res);
-                      // }).catch((err) => {
-                      //     console.log("Error: "+err);
-                      // });
+                    // self.$axios.post(self.AppStaticParams.loginUrl|| "/login",userinfo).then((res) => {
+                    //     localStorage.setItem('ms_username',res);
+                    //     self.$router.push('/readme');
+                    //     console.log("Response: "+res);
+                    // }).catch((err) => {
+                    //     console.log("Error: "+err);
+                    // });
 
-                      return true;
+                    return true;
 
-                    } else {
-                        console.log('error submit!!');
-                        return false;
-                    }
-                });
+                  } else {
+                      console.log('error submit!!');
+                      return false;
+                  }
+              });
             }
         }
     }

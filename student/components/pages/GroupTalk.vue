@@ -1,7 +1,7 @@
 <template>
 <div class="signin-wrapper">
   <div class = "container">
-    <h1 class="title">签到</h1>
+    <h1 class="title">讨论</h1>
     <!-- <mt-actionsheet cancel-text="'取消'" :actions="actions" v-if="sheetVisible">
     </mt-actionsheet> -->
   </div>

@@ -13,10 +13,25 @@ export default new Router({
         {
             path: '/index',
             component: resolve => require(['../components/common/Home.vue'], resolve),
-        },
-        {
-            path: '/signin',
-            component: resolve => require(['../components/pages/Signin.vue'], resolve),
+            children:[
+              {
+                  path: '/signin',
+                  alias: '/',
+                  component: resolve => require(['../components/pages/Signin.vue'], resolve),
+              },
+              {
+                  path: '/grouptalk',
+                  component: resolve => require(['../components/pages/GroupTalk.vue'], resolve),
+              },
+              {
+                  path: '/mycenter',
+                  component: resolve => require(['../components/pages/MyCenter.vue'], resolve),
+              },
+              {
+                  path: '/question',
+                  component: resolve => require(['../components/pages/Question.vue'], resolve),
+              },
+            ]
         },
         {
             path: '/login',
