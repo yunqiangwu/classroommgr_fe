@@ -16,10 +16,10 @@
           <img slot="icon" src="../../assets/100x100.png">
           分组讨论
         </mt-tab-item>
-        <mt-tab-item title="抢答题目" id="question"   >
+        <!-- <mt-tab-item title="抢答题目" id="question"   >
           <img slot="icon" src="../../assets/100x100.png">
           抢答题目
-        </mt-tab-item>
+        </mt-tab-item> -->
         <mt-tab-item title="个人中心" id="mycenter"  >
           <img slot="icon" src="../../assets/100x100.png">
           个人中心

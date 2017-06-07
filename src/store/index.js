@@ -42,16 +42,23 @@ export default new Vuex.Store({
             groupName:'',
             signNum: 0,
             totalNum: 0,
-        }
+        },
+        chatRecord:[],
     },
 
     // You can use it as a state getter function (probably the best solution)
     getters: {
+        chatRecord(state){
+          return state.chatRecord
+        },
         isAuthenticated(state) {
             return !!state.userInfo.username;
         },
         currentUserName(state) {
             return state.userInfo && state.userInfo.username;
+        },
+        currentUser(state) {
+            return state.userInfo ;
         },
         studentGroups(state) {
             return state.studentGroups;
@@ -103,6 +110,8 @@ export default new Vuex.Store({
     },
 
     actions: {
+
+
 
         [types.FETCH_STUDENT_GROUPS]({
             commit,

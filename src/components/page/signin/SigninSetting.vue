@@ -6,8 +6,6 @@
             <el-breadcrumb-item>签到设置</el-breadcrumb-item>
         </el-breadcrumb>
     </div>
-
-        <!-- <transition name="el-zoom-in-center"> -->
     <el-form v-show="signinState!=1" ref="form" :model="form" label-width="80px">
         <el-row>
             <el-col :span="12">
@@ -45,8 +43,6 @@
             </el-col>
         </el-row>
     </el-form>
-  <!-- </transition> -->
-
     <div ref="controlDiv">
 
         <el-row>
@@ -69,65 +65,33 @@
 
             </el-col>
             <el-col :span="12">
-
-                <!-- <el-form-item> -->
-
                 <transition-group name="el-zoom-in-center">
-
                     <el-button key="startSignin" icon="start" size="large" v-show="signinState == 0" type="primary" @click="startSignin()">开启签到</el-button>
-
-                    <el-button  key="cancleSignin" icon="start" size="large" v-show="signinState == 1" type="success" @click="cancleSignin()">取消签到</el-button>
-
-                    <el-button  key="reSignin" icon="start" size="large" v-show="signinState == 3" type="success" @click="reSignin()">从新开始</el-button>
-                    <el-button  key="reSignin" icon="start" size="large" v-show="signinState == 3" type="success" @click="syncSignin()">保存签到记录</el-button>
-
-
-
-
+                    <el-button key="cancleSignin" icon="start" size="large" v-show="signinState == 1" type="success" @click="cancleSignin()">取消签到</el-button>
+                    <el-button key="reSignin" icon="start" size="large" v-show="signinState == 3" type="success" @click="reSignin()">从新开始</el-button>
+                    <el-button key="reSignin" icon="start" size="large" v-show="signinState == 3" type="success" @click="syncSignin()">保存签到记录</el-button>
                     <el-button key="forcefinsh" icon="start" size="large" v-show="signinState == 1" type="warning" @click="forceFinshSignin">提前结束签到</el-button>
-
                     <div style="display:inline-block;" key="isshow2wm" v-show="signinState == 1">
                         <span>&nbsp;&nbsp;二维码：</span>
                         <el-switch :width="80" v-model="isShow2wm" on-text="显示" off-text="不显示" on-color="#13ce66" off-color="#ff4949">
                         </el-switch>
                     </div>
-
-                    <!-- <span key="debug">{{qConfig.value}}</span> -->
-
                 </transition-group>
-                <!-- </el-form-item> -->
-
-
-
             </el-col>
         </el-row>
     </div>
-
     <transition name="el-zoom-in-center">
-          <vue-q-art ref="erwm" v-show="isShow2wm" class="erwm" :config="qConfig" :downloadButton="false"></vue-q-art>
+        <vue-q-art ref="erwm" v-show="isShow2wm" class="erwm" :config="qConfig" :downloadButton="false"></vue-q-art>
     </transition>
-
-
     <signin-student-list @click-student="signin" :student-list="currentStudents" :signin-states="form.result" class="m-student-list" ref="studentList">
     </signin-student-list>
-
-
 </div>
 </template>
-
 <script>
 import * as types from 'src/store/types';
 import zkTimeDown from './Timer.vue';
 import SigninStudentList from './SigninStudentList.vue';
-// import moment from 'moment';
 import VueQArt from 'vue-qart'
-//
-// new Vue({
-//     components: {VueQArt}
-// })
-
-
-
 export default {
 
     components: {
@@ -146,52 +110,61 @@ export default {
 
     },
     data: function() {
-
         var self = this;
-
         return {
+            socketEvents: {
+                '/topic/getSigninMsg': function(frame) {
+                    var username = frame.headers.username;
+                    if (!username) {
+                        return;
+                    }
+                    var uid = self.currentStudents.find(function(item) {
+                        return item.username === username
+                    })['id'];
 
-          socketEvents:{
-            '/topic/getSigninMsg': function (frame) {
-              var username = frame.headers.username;
-               if(!username){
-                 return;
-               }
-               var uid = self.currentStudents.find(function(item){return item.username ===username})['id'];
-
-               if(self.signinState == 1){
-                 self.$stomp.send(`/user/${username}/receiveSiginMsg`,{signinState:self.signinState,mSigninState:self.form.result[''+uid]},JSON.stringify(self.form));
-               }else{
-                 self.$stomp.send(`/user/${username}/noSigin`,{signinState:self.signinState});
-               }
+                    if (self.signinState == 1) {
+                        self.$stomp.send(`/user/${username}/receiveSiginMsg`, {
+                            signinState: self.signinState,
+                            mSigninState: self.form.result['' + uid]
+                        }, JSON.stringify(self.form));
+                    } else {
+                        self.$stomp.send(`/user/${username}/noSigin`, {
+                            signinState: self.signinState
+                        });
+                    }
+                },
+                '/topic/doSignin': function(frame) {
+                    if (self.signinState != 1) {
+                        return;
+                    }
+                    var username = frame.headers.username;
+                    var uid = self.currentStudents.find(function(item) {
+                        return item.username === username
+                    })['id'];
+                    if (!uid) {
+                        return;
+                    }
+                    self.$store.dispatch(types.SIGNIN, uid).then(function() {
+                        self.$stomp.send(`/user/${username}/finishSigninMsg`, {
+                            signinState: self.signinState,
+                            mSigninState: 1
+                        }, JSON.stringify(self.form));
+                    });
+                }
             },
-            '/topic/doSignin':function (frame) {
-                if(self.signinState!=1){
-                  return;
-                }
-                var username = frame.headers.username;
-                var uid = self.currentStudents.find(function(item){return item.username ===username})['id'];
-                if(!uid){
-                  return;
-                }
-                self.$store.dispatch(types.SIGNIN,uid).then(function () {
-                  self.$stomp.send(`/user/${username}/finishSigninMsg`,{signinState:self.signinState,mSigninState:1},JSON.stringify(self.form));
-                });
-            }
-          },
 
-          qConfig: {
+            qConfig: {
                 value: this.AppStaticParams.studentUrl,
                 imagePath: '/static/img/img2.jpg',
                 filter: 'color',
-                size:400,
+                size: 400,
             },
             form: {
                 id: '',
                 name: '',
                 groupName: '',
                 timeSpan: '00:59',
-                result: {},  // 0 暂未签到   1 已经签到  2 未到  3 请假
+                result: {}, // 0 暂未签到   1 已经签到  2 未到  3 请假
                 noSignNum: 0,
                 signNum: 0,
                 totalNum: 0,
@@ -203,80 +176,60 @@ export default {
             signinState: 0, // 0 未开始签到   1 正在进行签到  2 签到结束
             isShow2wm: false,
             timeProgress: 0,
-
-
-
-
         }
     },
 
     filters: {
         convertSeconds(timeSpanStr) {
-            // console.log(timeSpanStr)
-            // debugger;
             let [h, m] = timeSpanStr.split(':');
-            // console.log(h,m);
             return (parseInt(h) * 60 + parseInt(m)) * 60;
         },
     },
     watch: {
-        // 'qConfig.size': function (val, oldVal) {
-        //   this.qConfig.size = val;
-        //   this.$refs.qArt.renderQrcode(this.qConfig);
-        // },
-        signinProgress(value){
-          if(value === 100){
-            var self = this;
-            this.$nextTick(()=>{
-              self.$refs.timer.finsh();
-            });
-
-          }
+        signinProgress(value) {
+            if (value === 100) {
+                var self = this;
+                this.$nextTick(() => {
+                    self.$refs.timer.finsh();
+                });
+            }
         },
         signinState(value) {
             var self = this;
             if (value !== 1) {
                 self.isShow2wm = false;
             }
-
             this.$nextTick(() => {
                 var formEl = self.$refs.controlDiv;
                 var studentDiv = self.$refs.studentList.$el;
-
                 studentDiv.style.top = (formEl.offsetTop + formEl.offsetHeight) + 'px';
                 self.$refs.erwm.$el.style.top = (formEl.offsetTop + formEl.offsetHeight) + 'px';
-
-
             });
         },
         isShow2wm(v) {
             var self = this;
             this.$nextTick(() => {
                 var studentDiv = self.$refs.studentList.$el;
-
-
                 if (v) {
                     studentDiv.style.left = (studentDiv.offsetHeight + 8) + 'px';
                     self.$refs.erwm.$el.style.width = (studentDiv.offsetHeight - 20) + 'px';
-                    self.qConfig.size=studentDiv.offsetHeight -10;
-
+                    self.qConfig.size = studentDiv.offsetHeight - 10;
                 } else {
                     studentDiv.style.left = "10px";
-
                 }
 
             });
         }
     },
-    computed:{
-      signinProgress(){
-        return Math.round(100*(this.form.signNum/(this.form.totalNum||1)));
+    computed: {
+        signinProgress() {
+            return Math.round(100 * (this.form.signNum / (this.form.totalNum || 1)));
 
-      }
+        }
     },
     methods: {
-        signin(userid){
-            this.$store.dispatch('signin',userid);
+        signin(userid) {
+            this.$store.dispatch('signin', userid);
         },
 
         // 开始签到
@@ -293,17 +246,19 @@ export default {
             var groupName = self.studentGroupList.find(item => item.id === this.currentSelectGroupId).name;
             self.form.groupName = groupName;
 
-            self.currentStudents.forEach(function (item) {
-              self.$set(self.form.result,''+item.id,0);
+            self.currentStudents.forEach(function(item) {
+                self.$set(self.form.result, '' + item.id, 0);
             });
-            self.form.totalNum=self.currentStudents.length;
-            self.$store.dispatch(types.START_SIGNIN, self.form ).then((signRecord) => {
+            self.form.totalNum = self.currentStudents.length;
+            self.$store.dispatch(types.START_SIGNIN, self.form).then((signRecord) => {
                 self.form = signRecord;
                 self.$message.success('启动签到！');
                 self.$refs.timer.start();
                 self.signinState = 1;
-                self.qConfig.value= this.AppStaticParams.studentUrl+ "/signin?signinid="+signRecord.startTime.getTime() ;
-                self.$stomp.send('/topic/beginSigninMsg',{signinState:self.signinState},JSON.stringify(signRecord));
+                self.qConfig.value = this.AppStaticParams.studentUrl + "/signin?signinid=" + signRecord.startTime.getTime();
+                self.$stomp.send('/topic/beginSigninMsg', {
+                    signinState: self.signinState
+                }, JSON.stringify(signRecord));
                 self.isShow2wm = true;
                 self.loaded();
             });
@@ -311,19 +266,19 @@ export default {
         },
 
         cancleSignin() {
-          this.$message.success('取消签到！');
-          this.$refs.timer.reset();
-          this.signinState = 0;
+            this.$message.success('取消签到！');
+            this.$refs.timer.reset();
+            this.signinState = 0;
         },
 
-        reSignin(){
-          var self = this;
-          this.signinState = -1;
-          self.$store.dispatch(types.RESET_SIGNIN).then((resetSignin) => {
-              self.form = resetSignin;
-              self.$refs.timer.reset();
-              self.signinState = 0;
-          });
+        reSignin() {
+            var self = this;
+            this.signinState = -1;
+            self.$store.dispatch(types.RESET_SIGNIN).then((resetSignin) => {
+                self.form = resetSignin;
+                self.$refs.timer.reset();
+                self.signinState = 0;
+            });
         },
 
         forceFinshSignin() {
@@ -339,7 +294,9 @@ export default {
                 self.signinState = 3;
                 self.$message.success('签到活动结束！');
                 self.loaded();
-                this.$stomp.send('/topic/stopSigninMsg',{signinState:self.signinState},JSON.stringify(saveedRecord));
+                this.$stomp.send('/topic/stopSigninMsg', {
+                    signinState: self.signinState
+                }, JSON.stringify(saveedRecord));
             });
         },
         handerChangeGroup() {
@@ -349,29 +306,24 @@ export default {
             var studentIds = self.studentGroupList.find(item => item.id === this.currentSelectGroupId).studentIds;
 
             this.$store.dispatch(types.FETCH_STUDENT_BY_IDS, studentIds).then(students => {
-                // debugger;
                 self.currentStudents = students;
             });
 
         },
-        syncSignin(){
-          var self = this;
-          self.loading('连接中...');
-          self.signinState = -1;
-          this.$store.dispatch(types.SAVE_SIGNIN).then(() => {
-              // debugger;
-              // self.currentStudents = students;
-              self.signinState = 3;
-              self.loaded();
-          });
+        syncSignin() {
+            var self = this;
+            self.loading('连接中...');
+            self.signinState = -1;
+            this.$store.dispatch(types.SAVE_SIGNIN).then(() => {
+                self.signinState = 3;
+                self.loaded();
+            });
         }
     }
 }
 </script>
 
 <style>
-
-
 .erwm {
     position: absolute;
     margin-top: 10px;
@@ -383,13 +335,16 @@ export default {
     background: gray;
     bottom: 20px;
 }
-.erwm>div{
-  width: 100%;
-  height: 100%;
+
+.erwm>div {
+    width: 100%;
+    height: 100%;
 }
-.erwm>div>canvas{
+
+.erwm>div>canvas {
     width: 100%;
 }
+
 .m-student-list {
     right: 13px;
     left: 10px;
@@ -398,5 +353,4 @@ export default {
     transition: all .2s ease-in-out;
     position: absolute;
 }
-
 </style>

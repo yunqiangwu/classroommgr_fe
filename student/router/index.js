@@ -21,16 +21,13 @@ export default new Router({
               },
               {
                   path: '/grouptalk',
-                  component: resolve => require(['../components/pages/GroupTalk.vue'], resolve),
+                  component: resolve => require(['../components/pages/talk/GroupTalk.vue'], resolve),
               },
               {
                   path: '/mycenter',
                   component: resolve => require(['../components/pages/MyCenter.vue'], resolve),
               },
-              {
-                  path: '/question',
-                  component: resolve => require(['../components/pages/Question.vue'], resolve),
-              },
+              
             ]
         },
         {

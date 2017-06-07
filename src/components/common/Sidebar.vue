@@ -5,7 +5,7 @@
                 <i class="el-icon-setting"></i>签到
             </el-menu-item>
             <el-menu-item index="question">
-                <i class="el-icon-setting"></i>答题
+                <i class="el-icon-setting"></i>答题讨论
             </el-menu-item>
             <el-submenu index="2">
                 <template slot="title"><i class="el-icon-menu"></i>学生信息维护</template>
@@ -22,19 +22,19 @@
                 <el-menu-item index="upload">文件上传</el-menu-item>
             </el-submenu> -->
 
-            <el-submenu index="3">
+            <!-- <el-submenu index="3">
                 <template slot="title"><i class="el-icon-date"></i>题库维护</template>
                 <el-menu-item index="baseform">题目分类管理</el-menu-item>
                 <el-menu-item index="vueeditor">题目管理</el-menu-item>
                 <el-menu-item index="markdown">题目分类</el-menu-item>
-                <!-- <el-menu-item index="upload">文件上传</el-menu-item> -->
-            </el-submenu>
+            </el-submenu> -->
 
-            <el-submenu index="4">
+            <el-submenu index="3">
                 <template slot="title"><i class="el-icon-star-on"></i>报表</template>
                 <el-menu-item index="signinrecord">签到记录</el-menu-item>
-                <el-menu-item index="basecharts">学生表现</el-menu-item>
-                <el-menu-item index="mixcharts">混合图表</el-menu-item>
+                <!-- <el-menu-item index="basecharts">学生表现</el-menu-item> -->
+                                <el-menu-item index="mixcharts">混合图表</el-menu-item>
+                <!-- <el-menu-item index="mixcharts">混合图表</el-menu-item> -->
             </el-submenu>
         </el-menu>
     </div>

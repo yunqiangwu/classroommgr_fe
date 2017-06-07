@@ -12,6 +12,9 @@
                 <div class="login-btn">
                     <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
                 </div>
+                <div class="reg-btn">
+                  <a class="btn" href="#register">没有账号，点我注册</a>
+                </div>
                 <p style="text-align:center;margin-top:4px;font-size:12px;color:#ff0000;line-height:30px;">{{tipMsg}}</p>
             </el-form>
         </div>
@@ -130,5 +133,10 @@
     .login-btn button{
         width:100%;
         height:36px;
+    }
+    .reg-btn {
+      margin-top: 20px;
+       font-size:10px;
+       text-align: center;
     }
 </style>

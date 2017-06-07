@@ -1,29 +1,11 @@
 <template>
 <div class="question-wrapper">
         <div>
-            <div class="m_q_sidebar">
-                <div>
-                  <h4>选择分组：</h4>
-                  <el-select groupselector v-model="currentSelectGroupId" @change="handerChangeGroup" placeholder="请选择分组">
-                      <el-option v-for="item in studentGroupList" :key="item.id" :label="item.name" :value="item.id">
-                      </el-option>
-                  </el-select>
-                </div>
-                <div>
-                  <h4>分组成员列表：</h4>
-                  <user-list :list="studentList"></user-list>
-                </div>
-            </div>
+
             <div class="content_message">
-                <!-- <markdown-editor v-model="content" :configs="configs" ref="markdownEditor"></markdown-editor> -->
                 <div>
                   <h4>题目内容：</h4>
-                  <el-input
-                    placeholder="题目"
-                    icon="caret-right"
-                    v-model="content"
-                    :on-icon-click="handlequestionClick">
-                  </el-input>
+                  <h5>{{content}}</h5>
                 </div>
                 <div>
                   <h4>小组讨论记录：</h4>
@@ -35,6 +17,7 @@
                   v-model="input2"
                   :on-icon-click="handleIconClick">
                 </el-input>
+                <mt-button type="primary" @click="handleIconClick" size="large">发送</mt-button>
             </div>
             <div class="clear:both;"></div>
         </div>
@@ -50,10 +33,10 @@
 </template>
 
 <script>
-    import { markdownEditor } from 'vue-simplemde';
+    // import { markdownEditor } from 'vue-simplemde';
+
+import * as types from '../../../../src/store/types';
 import Message from './Message.vue';
-import UserList from './UserList.vue';
-import * as types from 'src/store/types';
 
 export default {
     created() {
@@ -87,6 +70,9 @@ export default {
                 '/topic/chat': function(frame) {
                     self.$store.getters.chatRecord.push(JSON.parse(frame.body));
                 },
+                '/topic/question': function(frame) {
+                    self.content = JSON.parse(frame.body).text;
+                },
               },
             // configs: {
             //     status: true,
@@ -100,9 +86,7 @@ export default {
         }
     },
     components: {
-        UserList,
         Message,
-
     },
     methods: {
 

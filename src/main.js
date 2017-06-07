@@ -51,7 +51,7 @@ Vue.prototype.loaded = _ => {
 
 router.beforeEach((to, from, next) => {
 
-  if(/\/login/.test(to.path)){
+  if(/\/(login|register)/.test(to.path)){
     next();
     return;
   }
@@ -100,7 +100,8 @@ Vue.mixin({
   },
   beforeDestory () {
     const events = this.socketEvents
-
+    console.log(23232323);
+    debugger;
     if (events) {
       var self = this;
       if (events) {
